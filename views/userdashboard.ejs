@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <title>User Dashboard</title>
+    <link rel="stylesheet" href="/styles/style.css">
+</head>
+<body class="home-page">
+
+    <div class="main-container">
+        <div class="left-panel">
+            <h1>Welcome <%= username %>!</h1>
+            <a href="/logout" class="btn" style="text-decoration: none;">Logout</a>
+            
+            <hr>
+
+            <div class="add-product-section">
+                <h2>Add New Product</h2>
+                <form action="/add-product" method="POST">
+                    <label for="name">Product Name:</label>
+                    <input type="text" id="name" name="name" required class="input">
+                    <br>
+                    <label for="description">Description:</label>
+                    <textarea id="description" name="description" required class="input" rows="4"></textarea>
+                    <br>
+                    <label for="price">Price:</label>
+                    <input type="number" id="price" name="price" required class="input">
+                    <br>
+                    <button type="submit" class="btn">Add Product</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <h2>Products</h2>
+            <% if (products.length > 0) { %>
+                <ul class="product-list">
+                    <% products.forEach(product => { %>
+                        <li>
+                            <strong><%= product.name %></strong>
+                            <ul>
+                                <li>Description: <%= product.description %></li>
+                                <li>Price: <%= product.price %> TL</li>
+                                <li>Registration Date: <%= product.created_at.toLocaleDateString() %></li>
+                            </ul>
+                        </li>
+                    <% }); %>
+                </ul>
+            <% } else { %>
+                <p>There are no products yet.</p>
+            <% } %>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/styles/style.css">
+</head>
+
+<body class="home-page">
+
+    <div class="main-container">
+        <div class="left-panel">
+            <h1>Welcome, Admin <%= username %>!</h1>
+            <a href="/logout" class="btn" style="text-decoration: none;">Logout</a>
+        </div>
+
+        <div class="right-panel">
+            <h2>Registered Users</h2>
+            <hr>
+            <% if (users.length > 0) { %>
+                <ul class="user-list">
+                    <% users.forEach(user => { %>
+                        <li>
+                            <strong>Username: <%= user.username %></strong> - Role: <%= user.role %> - User ID: <%= user.id %>
+                        </li>
+                    <% }); %>
+                </ul>
+                <% } else { %>
+                    <p>There are no registered users yet.</p>
+                    <% } %>
+        </div>
+    </div>
+</body>
+
+</html>
