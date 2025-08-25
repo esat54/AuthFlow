@@ -18,3 +18,5 @@ Thumbs.db
 # IDE dosyaları
 .vscode/
 .idea/
+
+/generated/prisma

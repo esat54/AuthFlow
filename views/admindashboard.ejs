@@ -17,13 +17,19 @@
         <div class="right-panel">
             <h2>Registered Users</h2>
             <hr>
-            <% if (users.length > 0) { %>
+            <% if (users.length> 0) { %>
                 <ul class="user-list">
-                    <% users.forEach(user => { %>
+                    <% users.forEach(user=> { %>
                         <li>
                             <strong>Username: <%= user.username %></strong> - Role: <%= user.role %> - User ID: <%= user.id %>
+
+                            <form action="/delete-user" method="POST" style="display: inline;">     <!-- Hide field for user ID  -->
+                                <input type="hidden" name="userId" value="<%= user.id %>">
+                                <button type="submit" class="btn delete-btn">Sil</button>
+                            </form>
+
                         </li>
-                    <% }); %>
+                        <% }); %>
                 </ul>
                 <% } else { %>
                     <p>There are no registered users yet.</p>

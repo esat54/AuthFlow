@@ -1,45 +1,63 @@
-const dbBaglantisi = require('../db/connection'); 
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
 
-exports.findUser = async (username, password) => {              // users find
+exports.findUser = async (username, password) => {        // users find
     try {
-        const result = await dbBaglantisi.query(
-            'SELECT * FROM users WHERE username = $1 AND password = $2',
-            [username, password]
-        );
+        const result = await prisma.user.findFirst({
+            where: {
+                username: username,    
+                password: password
+            }
+        });
+        return result; 
 
-        return result.rows[0];  //get the first and only result
-
-    } catch (err) {
-        console.error('Database connection error or query error', err);
+    } catch (error) {
+        console.error('Database error', error);
         return null;
     }
 };
 
 
-exports.createUser = async (username, password) => {        // new user creation function
+
+
+exports.createUser = async (username, password, role = 'USER') => {        // new user creation function
     try {
-        const result = await dbBaglantisi.query(
-            'INSERT INTO users (username, password) VALUES ($1, $2)',
-            [username, password]
-        );
-        return result;
+        const result = await prisma.user.create({
+            data: {
+                username: username,    
+                password: password,
+                role: role            // default 'USER'
+            },
+        });
 
     } catch (error) {
         console.error('Registration error', error);
-        throw error; 
+        throw error;
     }
 };
 
 
-exports.getAllUsers = async () => {             
+exports.getAllUsers = async () => {
     try {
-        const result = await dbBaglantisi.query("SELECT * FROM users");
-        return result.rows; // Returns the user data
-        
+        const result = await prisma.user.findMany();
+
     } catch (error) {
         console.error('Error getting users:', error);
-        throw error; 
+        throw error;
     }
 };
 
+
+
+
+
+exports.deleteUser = async (userId) => {
+    try {
+        await prisma.user.delete({
+            where: { id: userId }
+        });
+    } catch (error) {
+        throw error;
+    }
+};

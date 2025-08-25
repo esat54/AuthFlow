@@ -10,3 +10,17 @@ exports.getAdminDashboard = async (req, res) => {
         res.status(500).send('Server error');
     }
 };
+
+
+exports.deleteUser = async (req, res) => {             
+    try {
+        const userId = req.body.userId;
+
+        await authModel.deleteUser(userId);
+
+        res.redirect('/admindashboard');
+
+    } catch (error) {
+        console.error('Error deleting user:', error);
+    }
+}

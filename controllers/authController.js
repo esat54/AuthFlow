@@ -1,23 +1,23 @@
 const authModel = require('../models/authModel');
 
 
-
 exports.getHome = (req, res) => {                   //homepage
     res.render('home')
-}
-
-
-
-exports.getLogin = (req, res) => {                  //get Login
-    res.render('login', { error: null });   
 };
 
+exports.getAuth = (req, res) => {
+    res.render('auth');
+};
+
+
+
 exports.postLogin = async (req, res) => {       //post Login
-    const username = req.body.username;
-    const password = req.body.password;
+    const username = req.body.loginusername;
+    const password = req.body.loginpassword;
     console.log(`Giriş denemesi ->Username '${username}', Şifre: '${password}'`);
 
     const user = await authModel.findUser(username, password);
+
 
     if (user) {    //there is a user
         req.session.username = user.username;
@@ -33,27 +33,22 @@ exports.postLogin = async (req, res) => {       //post Login
         }
 
     } else {
-        res.render('login', { error: 'Username or password wrong' });
+        res.render('auth', { error: 'Username or password wrong' });
     }
 };
 
 
-
-exports.getRegister = (req, res) => {                    //get Register
-    res.render('register');
-};
-
 exports.postRegister = async (req, res) => {        //post Register
-    const username = req.body.username;
-    const password = req.body.password;
+    const username = req.body.registerusername;
+    const password = req.body.registerpassword;
 
     try {
         await authModel.createUser(username, password);
-        res.render('register', { message: 'Registration successful! You can now log in.' });
+        res.render('auth', { message: 'Registration successful! You can now log in.' });
 
     } catch (error) {
         console.error('Registration error:', error);
-        res.render('register', { message: 'Registration failed! Username already exists.' });
+        res.render('auth', { message: 'Registration failed! Username already exists.' });
     }
 };
 
@@ -67,6 +62,6 @@ exports.getLogout = (req, res) => {                 //logout
             return res.status(500).send('Logout failed.');
         }
 
-        res.redirect('/login');
+        res.redirect('/auth');
     });
 };

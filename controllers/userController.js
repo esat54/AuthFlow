@@ -4,42 +4,77 @@ const productModel = require('../models/productModel');
 
 
 exports.getUserDashboard = async (req, res) => {
-    if (req.session.username) {
+    try {
+        const products = await productModel.getProductsByUserId(req.session.userId);
+        const categories = await productModel.getCategoriesByUserId(req.session.userId);
 
-        try {
-            const products = await productModel.getProductsByUserId(req.session.userId);
+        res.render('userdashboard', { username: req.session.username, products: products, categories: categories });
 
-            res.render('userdashboard', { username: req.session.username, products: products });
-
-        } catch (error) {
-            console.error('Error getting products:', error);
-            res.status(500).send('Server error.');
-        }
-
-    } else {
-        res.redirect('/login');
+    } catch (error) {
+        console.error('Error getting products:', error);
+        res.status(500).send('Server error.');
     }
 };
 
 
 exports.addProduct = async (req, res) => {
     try {
-        // Get the data from the form
-        const name = req.body.name;
-        const description = req.body.description;
-        const price = req.body.price;
+        const { name, description } = req.body;
+        const price = parseFloat(req.body.price);
+        const categoryId = parseInt(req.body.category, 10);
+        const userId = req.session.userId;
 
-        // Call the model and send the data
-        await productModel.addProduct(name, description, price, req.session.userId);
 
-        res.render('userdashboard', {
-            username: req.session.username,
-            products: await productModel.getProductsByUserId(req.session.userId), // Get the product list again
-            message: 'Product added successfully!'
-        });
+        await productModel.addProduct(name, description, price, categoryId, userId);
+
+        res.redirect('/userdashboard');
 
     } catch (error) {
         console.error('Error adding product:', error);
+        res.status(500).send('Sunucu hatası.');
+    }
+};
+
+
+
+exports.addCategory = async (req, res) => {
+    try {
+        const categoryName = req.body.categoryName;
+        const userId = req.session.userId;
+
+        await productModel.addCategory(categoryName, userId);
+        res.redirect('/userdashboard');
+
+    } catch (error) {
+        console.error('Error adding category:', error);
         res.status(500).send('Server error');
     }
 };
+
+
+exports.deleteProduct = async (req, res) => {
+
+    try {
+        const productId = parseInt(req.body.productId);
+
+        await productModel.deleteProduct(productId);
+        res.redirect('/userdashboard');
+
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
+exports.deleteCategory = async (req, res) => {
+    try {
+
+        const categoryId = parseInt(req.body.categoryId);
+
+        await productModel.deleteCategory(categoryId);
+        res.redirect('userdashboard');
+        
+    } catch (error) {
+        console.log(error)
+    }
+}

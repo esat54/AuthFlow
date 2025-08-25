@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <title>Auth</title>
+    <link rel="stylesheet" href="/styles/style.css">
+</head>
+
+<body>
+
+<div class="container"> 
+
+    <div class="login">
+        
+        <h1 class="title">Login Section</h1>
+
+        <form action="/login" method="POST">
+            <input type="text" name="loginusername" placeholder="Username" required class="input"><br><br>
+            <input type="password" name="loginpassword" placeholder="Password" required class="input"><br><br>
+
+            <div class="button-container">
+                <button type="submit" class="btn">Login</button>
+            </div>
+            <% if (typeof error !=='undefined' && error) { %>
+                <p style="color: red;">
+                    <%= error %>
+                </p>
+                <% } %>
+        </form>
+
+    </div>
+
+
+    <div class="register">
+       
+        <h1 class="title">Register Section</h1>
+
+        <form action="/register" method="POST">
+            <input type="text" name="registerusername" placeholder="Username" required class="input"><br><br>
+            <input type="password" name="registerpassword" placeholder="Password" required class="input"><br><br>
+            <button type="submit" class="btn">Register</button>
+
+            <% if (typeof message !=='undefined' ) { %>
+                <p style="color: rgb(255, 0, 0);">
+                    <%= message %>
+                </p>
+                <% } %>
+
+        </form>
+        
+    </div>
+
+
+</div>
+
+
+</body>
+</html>
