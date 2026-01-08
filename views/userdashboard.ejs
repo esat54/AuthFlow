@@ -1,121 +1,109 @@
 <!DOCTYPE html>
 <html lang="tr">
-
 <head>
     <title>User Dashboard</title>
     <link rel="stylesheet" href="/styles/style.css">
 </head>
 
 <body class="home-page">
-    <div class="main-container">
 
+<div class="main-container">
 
-        <div class="left-panel">
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
+
+        <div class="header">
             <h1>Welcome <%= username %>!</h1>
-            <a href="/logout" class="btn" style="text-decoration: none;">Logout</a>
+            <a href="/logout" class="btn">Logout</a>
+        </div>
 
-            <hr>
+        <hr>
 
-            <div class="form-section">
+        <div class="form-section">
 
-                <div class="add-product-section">
-                    <h2>Add New Product</h2>
+            <!-- ADD PRODUCT -->
+            <div class="add-product-section card">
+                <h2>Add New Product</h2>
 
-                    <form action="/add-product" method="POST">
-                        <label for="name">Product Name:</label>
-                        <input type="text" id="name" name="name" required class="input">
-                        <br>
-                        <label for="description">Description:</label>
-                        <textarea id="description" name="description" required class="input" rows="4"></textarea>
-                        <br>
-                        <label for="price">Price:</label>
-                        <br>
-                        <input type="number" id="price" name="price" required class="input">
-                        <br>
-                        <button type="submit" class="btn">Add Product</button>
-                        <br>
-                        <label for="category">Category:</label>
+                <form action="/add-product" method="POST">
+                    <label>Product Name</label>
+                    <input type="text" name="name" class="input" required>
 
-                        <select id="category" name="category" required class="input">
-                            <% categories.forEach(i=> { %>
-                                <option value="<%= i.id %>">
-                                    <%= i.name %>
-                                </option>
-                                <% }); %>
-                        </select>
+                    <label>Description</label>
+                    <textarea name="description" rows="4" class="input" required></textarea>
 
-                    </form>
+                    <label>Price</label>
+                    <input type="number" name="price" class="input" required>
 
+                    <label>Category</label>
+                    <select name="category" class="input" required>
+                        <% categories.forEach(i => { %>
+                            <option value="<%= i.id %>"><%= i.name %></option>
+                        <% }) %>
+                    </select>
+
+                    <button type="submit" class="btn">Add Product</button>
+                </form>
+            </div>
+
+            <!-- ADD CATEGORY -->
+            <div class="add-category-section card">
+                <h2>Add New Category</h2>
+
+                <form action="/add-category" method="POST">
+                    <label>Category Name</label>
+                    <input type="text" name="categoryName" class="input" required>
+                    <button type="submit" class="btn">Add Category</button>
+                </form>
+
+                <div class="category-list">
+                    <h3>Existing Categories</h3>
+                    <ul>
+                        <% categories.forEach(i => { %>
+                            <li>
+                                <span><%= i.name %></span>
+                                <form action="/delete-category" method="POST">
+                                    <input type="hidden" name="categoryId" value="<%= i.id %>">
+                                    <button class="btn delete-btn">X</button>
+                                </form>
+                            </li>
+                        <% }) %>
+                    </ul>
                 </div>
-
-                <div class="add-category-section">
-                    <h2>Add New Category</h2>
-
-                    <form action="/add-category" method="POST">
-                        <label for="categoryName">Category Name:</label>
-                        <input type="text" id="categoryName" name="categoryName" required class="input">
-                        <br>
-                        <button type="submit" class="btn">Add Category</button>
-                    </form>
-
-                    <div class="category-list">
-                        <h3>Existing Categories</h3>
-                        <ul>
-                            <% categories.forEach(i=> { %>
-                                <li>
-                                    <%= i.name %>
-                                        <form action="/delete-category" method="POST" style="display: inline;">
-                                            <!-- Hide field for category ID -->
-                                            <input type="hidden" name="categoryId" value="<%= i.id %>">
-                                            <button type="submit" class="btn delete-btn">X</button>
-                                        </form>
-                                </li>
-                                <% }); %>
-
-                        </ul>
-                    </div>
-
-                </div>
-
             </div>
 
         </div>
-
-
-
-        <div class="right-panel">
-            <h2>Products</h2>
-            <% if (products.length> 0) { %>
-                <ul class="product-list">
-                    <% products.forEach(product=> { %>
-                        <li>
-                            <strong>
-                                <%= product.name %>
-                            </strong>
-                            <ul>
-                                <li>Description: <%= product.description %>
-                                <li>Price: <%= product.price %> TL</li>
-                                <li>Registration Date: <%= product.createdAt.toLocaleDateString() %>
-                                </li>
-                                <li>Category : <%= product.category.name %>
-                                </li>
-                            </ul>
-
-                            <form action="/delete-product" method="POST" style="display: inline;">
-                                <!-- Hide field for product ID -->
-                                <input type="hidden" name="productId" value="<%= product.id %>">
-                                <button type="submit" class="btn delete-btn">Delete</button>
-                            </form>
-
-                        </li>
-                        <% }); %>
-                </ul>
-                <% } else { %>
-                    <p>There are no products yet.</p>
-                    <% } %>
-        </div>
-
     </div>
-</body>
 
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+        <h2>Products</h2>
+
+        <% if (products.length > 0) { %>
+            <ul class="product-list">
+                <% products.forEach(product => { %>
+                    <li>
+                        <strong><%= product.name %></strong>
+                        <ul>
+                            <li>Description: <%= product.description %></li>
+                            <li>Price: <%= product.price %> TL</li>
+                            <li>Date: <%= product.createdAt.toLocaleDateString() %></li>
+                            <li>Category: <%= product.category.name %></li>
+                        </ul>
+
+                        <form action="/delete-product" method="POST">
+                            <input type="hidden" name="productId" value="<%= product.id %>">
+                            <button class="btn delete-btn">Delete</button>
+                        </form>
+                    </li>
+                <% }) %>
+            </ul>
+        <% } else { %>
+            <p>There are no products yet.</p>
+        <% } %>
+    </div>
+
+</div>
+
+</body>
 </html>
